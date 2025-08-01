@@ -18,16 +18,14 @@ model, tokenizer = FastLanguageModel.from_pretrained(
     model_name="unsloth/mistral-7b-v0.3",
     max_seq_length=max_seq_length,
     dtype=dtype,
-    load_in_4bit=load_in_4bit,
-    device_map="cpu"
+    load_in_4bit=load_in_4bit
 )
 
 model = FastLanguageModel.get_peft_model(
     model,
     r = 128,
-    target_modules=["q_proj", "k_proj", "v_proj", "o_proj", 
-                    "gate_proj", "up_proj", "down_proj",
-                    "lm_head", "embed_tokens"],
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
+                    "gate_proj", "up_proj", "down_proj"],
     lora_alpha=32,
     lora_dropout= 0,
     bias="none",
@@ -41,14 +39,10 @@ trainer = UnslothTrainer(
     model=model,
     train_dataset=dataset,
     max_seq_length= max_seq_length,
-    args =
-        SFTConfig(
-            dataset_text_field="text",
-            dataset_num_proc=8,
-            tokenizer=tokenizer,
-        ) 
-        | 
-        UnslothTrainingArguments(
+    tokenizer=tokenizer,
+    dataset_text_field="text",
+    dataset_num_proc=8,
+    args = UnslothTrainingArguments(
             per_device_train_batch_size = 2,
             gradient_accumulation_steps = 8,
             warmup_ratio = 0.1,
@@ -61,7 +55,9 @@ trainer = UnslothTrainer(
             lr_scheduler_type = "cosine",
             seed = 3407,
             output_dir = "outputs",
-            report_to = "none", 
+            report_to = "none",
+            fp16=True,
+            auto_find_batch_size = False,
         )
 )
 
