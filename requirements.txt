@@ -1,0 +1,15 @@
+bitsandbytes
+torch
+torchvision
+torchaudio
+accelerate
+peft
+trl
+cut_cross_entropy
+unsloth_zoo
+sentencepiece
+protobuf
+datasets
+unsloth
+transformers
+numpy==1.26.4
