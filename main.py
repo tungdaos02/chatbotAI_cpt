@@ -67,3 +67,4 @@ trainer = UnslothTrainer(
 
 trainer_stats = trainer.train()
 
+model.save_pretrained_merged("new_model_merged_16bit", tokenizer, save_method="merged_16bit")
